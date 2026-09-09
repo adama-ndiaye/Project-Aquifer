@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Project Aquifer</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <div class="brand">
+
+            <span class="brand-icon">
+                A
+            </span>
+
+            <span>
+                Project Aquifer
+            </span>
+
+        </div>
+
+        <div class="nav-links">
+
+            <a
+                href="index.html"
+                class="active"
+            >
+                Dashboard
+            </a>
+
+            <a href="tasks.html">
+                Tasks
+            </a>
+
+            <a href="cad.html">
+                CAD
+            </a>
+
+            <a href="components.html">
+                Components
+            </a>
+
+            <a href="meetings.html">
+                Meetings
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <main class="page">
+
+        <section class="page-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    ME 443 CAPSTONE
+                </p>
+
+                <h1>
+                    Project Aquifer
+                </h1>
+
+                <p class="subtitle">
+                    Self-Service Refill Vending Machine
+                </p>
+
+            </div>
+
+
+            <div class="header-actions">
+
+                <span
+                    class="status"
+                    id="projectPhase"
+                >
+                    Loading...
+                </span>
+
+                <button
+                    class="secondary-button"
+                    id="editProjectButton"
+                >
+                    Edit Project
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <section class="dashboard-grid">
+
+            <div class="card">
+
+                <p class="card-label">
+                    Project Progress
+                </p>
+
+                <h2 id="projectProgress">
+                    —
+                </h2>
+
+                <div class="progress-track">
+
+                    <div
+                        class="progress-bar"
+                        id="projectProgressBar"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Budget Used
+                </p>
+
+                <h2 id="budgetUsed">
+                    —
+                </h2>
+
+                <p class="card-note">
+                    <strong id="budgetRemaining">
+                        —
+                    </strong>
+                    remaining of $6,000
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Open Tasks
+                </p>
+
+                <h2 id="openTaskCount">
+                    —
+                </h2>
+
+                <p class="card-note">
+                    Team work remaining
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Next Meeting
+                </p>
+
+                <h2
+                    id="nextMeetingDate"
+                    class="meeting-card-date"
+                >
+                    —
+                </h2>
+
+                <p
+                    class="card-note"
+                    id="nextMeetingInfo"
+                >
+                    Loading...
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <div
+            id="dashboardMessage"
+            style="
+                display:none;
+                margin-bottom:20px;
+                padding:14px 16px;
+                background:white;
+                border:1px solid #e2e5e9;
+                border-radius:8px;
+                font-size:13px;
+            "
+        ></div>
+
+
+        <section class="workspace">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        WORKSPACE
+                    </p>
+
+                    <h2>
+                        Current Work
+                    </h2>
+
+                </div>
+
+
+                <div class="heading-actions">
+
+                    <button
+                        id="refreshDashboardButton"
+                        class="secondary-button"
+                    >
+                        Refresh
+                    </button>
+
+
+                    <a
+                        href="tasks.html"
+                        class="secondary-action"
+                    >
+                        View All Tasks
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div id="taskList"></div>
+
+
+            <div
+                class="empty-state"
+                id="emptyState"
+            >
+
+                <div class="empty-icon">
+                    ✓
+                </div>
+
+                <h3>
+                    No open tasks
+                </h3>
+
+                <p>
+                    Current project tasks will appear here.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="dashboard-lower-grid">
+
+            <div class="workspace">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            ENGINEERING
+                        </p>
+
+                        <h2>
+                            Project Library
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="quick-link-list">
+
+                    <a
+                        href="cad.html"
+                        class="quick-link"
+                    >
+
+                        <div>
+
+                            <strong>
+                                CAD Library
+                            </strong>
+
+                            <span id="cadCount">
+                                0 files
+                            </span>
+
+                        </div>
+
+                        <span>→</span>
+
+                    </a>
+
+
+                    <a
+                        href="components.html"
+                        class="quick-link"
+                    >
+
+                        <div>
+
+                            <strong>
+                                Components & BOM
+                            </strong>
+
+                            <span id="componentCount">
+                                0 components
+                            </span>
+
+                        </div>
+
+                        <span>→</span>
+
+                    </a>
+
+
+                    <a
+                        href="meetings.html"
+                        class="quick-link"
+                    >
+
+                        <div>
+
+                            <strong>
+                                Meeting Records
+                            </strong>
+
+                            <span id="completedMeetingCount">
+                                0 completed
+                            </span>
+
+                        </div>
+
+                        <span>→</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <div class="workspace">
+
+                <div class="section-heading">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            PROJECT
+                        </p>
+
+                        <h2>
+                            Project Details
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div class="project-details">
+
+                    <div>
+
+                        <span>
+                            Sponsor
+                        </span>
+
+                        <strong>
+                            Fillagreen & Nexus 234 Innovation District
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Budget
+                        </span>
+
+                        <strong>
+                            $6,000
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Prototype Target
+                        </span>
+
+                        <strong>
+                            June 2027
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Course
+                        </span>
+
+                        <strong>
+                            ME 443 Capstone
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <div
+        class="modal-background"
+        id="projectModal"
+    >
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        PROJECT SETTINGS
+                    </p>
+
+                    <h2>
+                        Update Project
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="close-button"
+                    id="closeProjectModal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="projectForm">
+
+                <label for="projectPhaseInput">
+                    Current Phase
+                </label>
+
+                <input
+                    type="text"
+                    id="projectPhaseInput"
+                    placeholder="Concept Development"
+                    required
+                >
+
+
+                <label for="projectProgressInput">
+                    Project Progress (%)
+                </label>
+
+                <input
+                    type="number"
+                    id="projectProgressInput"
+                    min="0"
+                    max="100"
+                    required
+                >
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="cancelProjectEdit"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="saveProjectButton"
+                    >
+                        Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+    <script src="supabase.js"></script>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

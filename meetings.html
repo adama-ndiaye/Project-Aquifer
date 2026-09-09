@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Meetings | Project Aquifer
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+
+            <span class="brand-icon">
+                A
+            </span>
+
+            <span>
+                Project Aquifer
+            </span>
+
+        </div>
+
+
+        <div class="nav-links">
+
+            <a href="index.html">
+                Dashboard
+            </a>
+
+            <a href="tasks.html">
+                Tasks
+            </a>
+
+            <a href="cad.html">
+                CAD
+            </a>
+
+            <a href="components.html">
+                Components
+            </a>
+
+            <a
+                href="meetings.html"
+                class="active"
+            >
+                Meetings
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN PAGE -->
+
+    <main class="page">
+
+
+        <!-- PAGE HEADER -->
+
+        <section class="page-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    TEAM COORDINATION
+                </p>
+
+                <h1>
+                    Meetings
+                </h1>
+
+                <p class="subtitle">
+                    Schedule meetings and preserve
+                    decisions, notes, and action items.
+                </p>
+
+            </div>
+
+
+            <button id="scheduleMeetingButton">
+
+                + Schedule Meeting
+
+            </button>
+
+        </section>
+
+
+        <!-- SUMMARY CARDS -->
+
+        <section class="dashboard-grid meeting-stats">
+
+            <div class="card">
+
+                <p class="card-label">
+                    Active Meetings
+                </p>
+
+                <h2 id="upcomingMeetingCount">
+                    0
+                </h2>
+
+                <p class="card-note">
+                    Awaiting completion
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Completed Meetings
+                </p>
+
+                <h2 id="completedMeetingCount">
+                    0
+                </h2>
+
+                <p class="card-note">
+                    Meeting records saved
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Next Meeting
+                </p>
+
+                <h2
+                    class="meeting-card-date"
+                    id="meetingPageNextDate"
+                >
+                    —
+                </h2>
+
+                <p
+                    class="card-note"
+                    id="meetingPageNextInfo"
+                >
+                    Not scheduled
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- DATABASE MESSAGE -->
+
+        <div
+            id="meetingMessage"
+            style="
+                display:none;
+                margin-bottom:20px;
+                padding:14px 16px;
+                background:white;
+                border:1px solid #e2e5e9;
+                border-radius:8px;
+                font-size:13px;
+            "
+        ></div>
+
+
+        <!-- ACTIVE MEETINGS -->
+
+        <section class="workspace meeting-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        SCHEDULE
+                    </p>
+
+                    <h2>
+                        Active Meetings
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="refreshMeetingsButton"
+                    class="secondary-button"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+
+            <div id="activeMeetings"></div>
+
+
+            <div
+                class="empty-state"
+                id="activeEmptyState"
+            >
+
+                <div class="empty-icon">
+                    📅
+                </div>
+
+                <h3>
+                    No meetings scheduled
+                </h3>
+
+                <p>
+                    Schedule your next team
+                    or sponsor meeting.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- COMPLETED MEETINGS -->
+
+        <section class="workspace meeting-section">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        MEETING RECORDS
+                    </p>
+
+                    <h2>
+                        Completed Meetings
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div id="completedMeetings"></div>
+
+
+            <div
+                class="empty-state compact-empty"
+                id="completedEmptyState"
+            >
+
+                <p>
+                    Completed meeting notes
+                    will appear here.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================
+         SCHEDULE MEETING MODAL
+    ====================================== -->
+
+    <div
+        class="modal-background"
+        id="meetingModal"
+    >
+
+        <div class="modal meeting-modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        NEW MEETING
+                    </p>
+
+                    <h2>
+                        Schedule Meeting
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="close-button"
+                    id="closeMeetingModalButton"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="meetingForm">
+
+                <label for="meetingTitle">
+                    Meeting Title
+                </label>
+
+                <input
+                    type="text"
+                    id="meetingTitle"
+                    placeholder="Weekly Sponsor Meeting"
+                    required
+                >
+
+
+                <div class="form-row">
+
+                    <div>
+
+                        <label for="meetingDate">
+                            Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="meetingDate"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="meetingTime">
+                            Time
+                        </label>
+
+                        <input
+                            type="time"
+                            id="meetingTime"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <label for="meetingLocation">
+                    Location / Zoom Link
+                </label>
+
+                <input
+                    type="text"
+                    id="meetingLocation"
+                    placeholder="Horizon Hall or https://zoom.us/..."
+                >
+
+
+                <label for="meetingRecurrence">
+                    Repeat
+                </label>
+
+                <select id="meetingRecurrence">
+
+                    <option value="none">
+                        Does not repeat
+                    </option>
+
+                    <option value="weekly">
+                        Weekly
+                    </option>
+
+                    <option value="biweekly">
+                        Every 2 weeks
+                    </option>
+
+                    <option value="monthly">
+                        Monthly
+                    </option>
+
+                </select>
+
+
+                <label for="meetingAgenda">
+                    Agenda
+                </label>
+
+                <textarea
+                    id="meetingAgenda"
+                    rows="5"
+                    placeholder="What should be discussed?"
+                ></textarea>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="cancelMeetingButton"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="saveMeetingButton"
+                    >
+                        Save Meeting
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         COMPLETE MEETING MODAL
+    ====================================== -->
+
+    <div
+        class="modal-background"
+        id="completeMeetingModal"
+    >
+
+        <div class="modal meeting-modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        MEETING RECORD
+                    </p>
+
+                    <h2 id="completionModalHeading">
+                        Complete Meeting
+                    </h2>
+
+                    <p
+                        class="modal-subtitle"
+                        id="completionMeetingTitle"
+                    ></p>
+
+                </div>
+
+
+                <button
+                    class="close-button"
+                    id="closeCompleteMeetingButton"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="completeMeetingForm">
+
+                <label for="meetingSummary">
+                    Meeting Summary / Notes
+                </label>
+
+                <textarea
+                    id="meetingSummary"
+                    rows="7"
+                    placeholder="Summarize what was discussed..."
+                    required
+                ></textarea>
+
+
+                <label for="meetingDecisions">
+                    Decisions Made
+                </label>
+
+                <textarea
+                    id="meetingDecisions"
+                    rows="4"
+                    placeholder="Example: Proceed with peristaltic pump testing..."
+                ></textarea>
+
+
+                <label for="meetingActionItems">
+                    Action Items
+                </label>
+
+                <textarea
+                    id="meetingActionItems"
+                    rows="5"
+                    placeholder="Example:
+Adama - Research pump suppliers
+Team member - Update reservoir CAD"
+                ></textarea>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="cancelCompleteMeeting"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="saveCompletionButton"
+                    >
+                        Save & Complete
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUPABASE LIBRARY -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+
+    <!-- PROJECT DATABASE CONNECTION -->
+
+    <script src="supabase.js"></script>
+
+
+    <!-- MEETING SYSTEM -->
+
+    <script src="meetings.js"></script>
+
+</body>
+
+</html>

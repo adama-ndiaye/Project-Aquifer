@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Components | Project Aquifer
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+
+            <span class="brand-icon">
+                A
+            </span>
+
+            <span>
+                Project Aquifer
+            </span>
+
+        </div>
+
+
+        <div class="nav-links">
+
+            <a href="index.html">
+                Dashboard
+            </a>
+
+            <a href="tasks.html">
+                Tasks
+            </a>
+
+            <a href="cad.html">
+                CAD
+            </a>
+
+            <a
+                href="components.html"
+                class="active"
+            >
+                Components
+            </a>
+
+            <a href="meetings.html">
+                Meetings
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN PAGE -->
+
+    <main class="page">
+
+
+        <!-- HEADER -->
+
+        <section class="page-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    BILL OF MATERIALS
+                </p>
+
+                <h1>
+                    Components
+                </h1>
+
+                <p class="subtitle">
+                    Track hardware, quantities,
+                    suppliers, procurement, and cost.
+                </p>
+
+            </div>
+
+
+            <button id="addComponentButton">
+
+                + Add Component
+
+            </button>
+
+        </section>
+
+
+        <!-- SUMMARY -->
+
+        <section class="dashboard-grid">
+
+            <div class="card">
+
+                <p class="card-label">
+                    Components
+                </p>
+
+                <h2 id="componentCount">
+                    0
+                </h2>
+
+                <p class="card-note">
+                    BOM line items
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Budget Used
+                </p>
+
+                <h2 id="totalCost">
+                    $0
+                </h2>
+
+                <p class="card-note">
+                    Total estimated cost
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Budget Remaining
+                </p>
+
+                <h2 id="remainingBudget">
+                    $6,000
+                </h2>
+
+                <p class="card-note">
+                    From $6,000 project budget
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Purchased
+                </p>
+
+                <h2 id="purchasedCount">
+                    0
+                </h2>
+
+                <p class="card-note">
+                    Components obtained
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- STATUS MESSAGE -->
+
+        <div
+            id="componentMessage"
+            style="
+                display:none;
+                margin-bottom:20px;
+                padding:14px 16px;
+                background:white;
+                border:1px solid #e2e5e9;
+                border-radius:8px;
+                font-size:13px;
+            "
+        ></div>
+
+
+        <!-- COMPONENT TABLE -->
+
+        <section class="workspace">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        BOM
+                    </p>
+
+                    <h2>
+                        Project Components
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="refreshComponentsButton"
+                    class="secondary-button"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+
+            <div
+                class="engineering-table-wrapper"
+                id="componentTableWrapper"
+            >
+
+                <table class="engineering-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Component
+                            </th>
+
+                            <th>
+                                Subsystem
+                            </th>
+
+                            <th>
+                                Qty
+                            </th>
+
+                            <th>
+                                Unit Cost
+                            </th>
+
+                            <th>
+                                Total
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody
+                        id="componentTableBody"
+                    ></tbody>
+
+                </table>
+
+            </div>
+
+
+            <div
+                class="empty-state"
+                id="componentEmptyState"
+            >
+
+                <div class="empty-icon">
+                    ⚙
+                </div>
+
+                <h3>
+                    No components yet
+                </h3>
+
+                <p>
+                    Build the shared Project Aquifer
+                    bill of materials.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ======================================
+         COMPONENT MODAL
+    ======================================= -->
+
+    <div
+        class="modal-background"
+        id="componentModal"
+    >
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        BOM ENTRY
+                    </p>
+
+                    <h2 id="componentModalTitle">
+                        Add Component
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="close-button"
+                    id="closeComponentModal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="componentForm">
+
+                <label for="componentName">
+                    Component
+                </label>
+
+                <input
+                    type="text"
+                    id="componentName"
+                    placeholder="Peristaltic Pump"
+                    required
+                >
+
+
+                <label for="componentSubsystem">
+                    Subsystem
+                </label>
+
+                <input
+                    type="text"
+                    id="componentSubsystem"
+                    placeholder="Dispensing System"
+                >
+
+
+                <div class="form-row">
+
+                    <div>
+
+                        <label for="componentQuantity">
+                            Quantity
+                        </label>
+
+                        <input
+                            type="number"
+                            id="componentQuantity"
+                            min="1"
+                            value="1"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div>
+
+                        <label for="componentCost">
+                            Unit Cost ($)
+                        </label>
+
+                        <input
+                            type="number"
+                            id="componentCost"
+                            min="0"
+                            step="0.01"
+                            value="0"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <label for="componentSupplier">
+                    Supplier
+                </label>
+
+                <input
+                    type="text"
+                    id="componentSupplier"
+                    placeholder="McMaster-Carr"
+                >
+
+
+                <label for="componentStatus">
+                    Status
+                </label>
+
+                <select id="componentStatus">
+
+                    <option value="Research">
+                        Research
+                    </option>
+
+                    <option value="Selected">
+                        Selected
+                    </option>
+
+                    <option value="Ordered">
+                        Ordered
+                    </option>
+
+                    <option value="Purchased">
+                        Purchased
+                    </option>
+
+                    <option value="Rejected">
+                        Rejected
+                    </option>
+
+                </select>
+
+
+                <label for="componentNotes">
+                    Notes
+                </label>
+
+                <textarea
+                    id="componentNotes"
+                    rows="4"
+                    placeholder="Specifications, alternatives, notes..."
+                ></textarea>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="cancelComponentButton"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="saveComponentButton"
+                    >
+                        Save Component
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUPABASE -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+    <script src="supabase.js"></script>
+
+    <script src="components.js"></script>
+
+</body>
+
+</html>

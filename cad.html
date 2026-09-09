@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        CAD Library | Project Aquifer
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+</head>
+
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <div class="brand">
+
+            <span class="brand-icon">
+                A
+            </span>
+
+            <span>
+                Project Aquifer
+            </span>
+
+        </div>
+
+
+        <div class="nav-links">
+
+            <a href="index.html">
+                Dashboard
+            </a>
+
+            <a href="tasks.html">
+                Tasks
+            </a>
+
+            <a
+                href="cad.html"
+                class="active"
+            >
+                CAD
+            </a>
+
+            <a href="components.html">
+                Components
+            </a>
+
+            <a href="meetings.html">
+                Meetings
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- MAIN PAGE -->
+
+    <main class="page">
+
+
+        <!-- HEADER -->
+
+        <section class="page-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    ENGINEERING DESIGN
+                </p>
+
+                <h1>
+                    CAD Library
+                </h1>
+
+                <p class="subtitle">
+                    Track parts, assemblies,
+                    drawings, revisions, and design ownership.
+                </p>
+
+            </div>
+
+
+            <button id="addCadButton">
+
+                + Add CAD Record
+
+            </button>
+
+        </section>
+
+
+        <!-- SUMMARY -->
+
+        <section class="dashboard-grid meeting-stats">
+
+            <div class="card">
+
+                <p class="card-label">
+                    CAD Records
+                </p>
+
+                <h2 id="cadRecordCount">
+                    0
+                </h2>
+
+                <p class="card-note">
+                    Parts, assemblies and drawings
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Assemblies
+                </p>
+
+                <h2 id="assemblyCount">
+                    0
+                </h2>
+
+                <p class="card-note">
+                    Assembly records
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Latest Revision
+                </p>
+
+                <h2
+                    class="small-card-value"
+                    id="latestRevision"
+                >
+                    —
+                </h2>
+
+                <p
+                    class="card-note"
+                    id="latestRevisionInfo"
+                >
+                    No CAD records
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- DATABASE MESSAGE -->
+
+        <div
+            id="cadMessage"
+            style="
+                display:none;
+                margin-bottom:20px;
+                padding:14px 16px;
+                background:white;
+                border:1px solid #e2e5e9;
+                border-radius:8px;
+                font-size:13px;
+            "
+        ></div>
+
+
+        <!-- CAD TABLE -->
+
+        <section class="workspace">
+
+            <div class="section-heading">
+
+                <div>
+
+                    <p class="eyebrow">
+                        DESIGN FILES
+                    </p>
+
+                    <h2>
+                        CAD Records
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="refreshCadButton"
+                    class="secondary-button"
+                >
+                    Refresh
+                </button>
+
+            </div>
+
+
+            <div
+                class="engineering-table-wrapper"
+                id="cadTableWrapper"
+            >
+
+                <table class="engineering-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Revision
+                            </th>
+
+                            <th>
+                                Owner
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="cadTableBody"></tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- EMPTY STATE -->
+
+            <div
+                class="empty-state"
+                id="cadEmptyState"
+            >
+
+                <div class="empty-icon">
+                    ◇
+                </div>
+
+                <h3>
+                    No CAD records yet
+                </h3>
+
+                <p>
+                    Add your first Project Aquifer
+                    part, assembly, or drawing.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================
+         CAD MODAL
+    ====================================== -->
+
+    <div
+        class="modal-background"
+        id="cadModal"
+    >
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        CAD RECORD
+                    </p>
+
+                    <h2 id="cadModalTitle">
+                        Add CAD Record
+                    </h2>
+
+                </div>
+
+
+                <button
+                    class="close-button"
+                    id="closeCadModal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="cadForm">
+
+                <label for="cadName">
+                    Name
+                </label>
+
+                <input
+                    type="text"
+                    id="cadName"
+                    placeholder="Reservoir Bracket"
+                    required
+                >
+
+
+                <label for="cadType">
+                    Type
+                </label>
+
+                <select id="cadType">
+
+                    <option value="Part">
+                        Part
+                    </option>
+
+                    <option value="Assembly">
+                        Assembly
+                    </option>
+
+                    <option value="Drawing">
+                        Drawing
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+
+                <label for="cadRevision">
+                    Revision
+                </label>
+
+                <input
+                    type="text"
+                    id="cadRevision"
+                    placeholder="A.01"
+                >
+
+
+                <label for="cadOwner">
+                    Owner
+                </label>
+
+                <input
+                    type="text"
+                    id="cadOwner"
+                    placeholder="Adama"
+                >
+
+
+                <label for="cadStatus">
+                    Status
+                </label>
+
+                <select id="cadStatus">
+
+                    <option value="In Design">
+                        In Design
+                    </option>
+
+                    <option value="Review">
+                        Review
+                    </option>
+
+                    <option value="Approved">
+                        Approved
+                    </option>
+
+                    <option value="Superseded">
+                        Superseded
+                    </option>
+
+                </select>
+
+
+                <label for="cadFileName">
+                    File Name
+                </label>
+
+                <input
+                    type="text"
+                    id="cadFileName"
+                    placeholder="reservoir_bracket.SLDPRT"
+                >
+
+
+                <label for="cadNotes">
+                    Notes
+                </label>
+
+                <textarea
+                    id="cadNotes"
+                    rows="5"
+                    placeholder="Design notes, changes, manufacturing concerns..."
+                ></textarea>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-button"
+                        id="cancelCadButton"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="saveCadButton"
+                    >
+                        Save Record
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- SUPABASE -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+    <script src="supabase.js"></script>
+
+    <script src="cad.js"></script>
+
+</body>
+
+</html>
