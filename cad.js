@@ -1,129 +1,158 @@
-// =====================================
+// ============================================
 // PROJECT AQUIFER
-// SHARED CAD LIBRARY
-// SUPABASE VERSION
-// =====================================
+// SHARED PROJECT FILE LIBRARY
+// SUPABASE STORAGE VERSION
+// ============================================
 
 
-// Current CAD records loaded from Supabase
+const STORAGE_BUCKET =
+    "project-files";
 
-let cadRecords = [];
 
+let projectFiles = [];
 
-// Used when editing an existing record
-
-let selectedCadId =
+let selectedFileId =
     null;
 
 
-// =====================================
+// ============================================
 // HTML ELEMENTS
-// =====================================
+// ============================================
 
-const addCadButton =
+const addFileButton =
     document.getElementById(
-        "addCadButton"
+        "addFileButton"
     );
 
 
-const cadModal =
+const fileModal =
     document.getElementById(
-        "cadModal"
+        "fileModal"
     );
 
 
-const cadModalTitle =
+const fileModalTitle =
     document.getElementById(
-        "cadModalTitle"
+        "fileModalTitle"
     );
 
 
-const closeCadModal =
+const closeFileModal =
     document.getElementById(
-        "closeCadModal"
+        "closeFileModal"
     );
 
 
-const cancelCadButton =
+const cancelFileButton =
     document.getElementById(
-        "cancelCadButton"
+        "cancelFileButton"
     );
 
 
-const cadForm =
+const fileForm =
     document.getElementById(
-        "cadForm"
+        "fileForm"
     );
 
 
-const saveCadButton =
+const saveFileButton =
     document.getElementById(
-        "saveCadButton"
+        "saveFileButton"
     );
 
 
-const refreshCadButton =
+const actualFileSection =
     document.getElementById(
-        "refreshCadButton"
+        "actualFileSection"
     );
 
 
-const cadTableBody =
+const actualFileInput =
     document.getElementById(
-        "cadTableBody"
+        "actualFile"
     );
 
 
-const cadTableWrapper =
+const existingFileInfo =
     document.getElementById(
-        "cadTableWrapper"
+        "existingFileInfo"
     );
 
 
-const cadEmptyState =
+const refreshFilesButton =
     document.getElementById(
-        "cadEmptyState"
+        "refreshFilesButton"
     );
 
 
-const cadRecordCount =
+const fileTableBody =
     document.getElementById(
-        "cadRecordCount"
+        "fileTableBody"
     );
 
 
-const assemblyCount =
+const fileTableWrapper =
     document.getElementById(
-        "assemblyCount"
+        "fileTableWrapper"
     );
 
 
-const latestRevision =
+const fileEmptyState =
     document.getElementById(
-        "latestRevision"
+        "fileEmptyState"
     );
 
 
-const latestRevisionInfo =
+const totalFileCount =
     document.getElementById(
-        "latestRevisionInfo"
+        "totalFileCount"
     );
 
 
-const cadMessage =
+const cadFileCount =
     document.getElementById(
-        "cadMessage"
+        "cadFileCount"
     );
 
 
-// =====================================
-// LOAD CAD RECORDS FROM SUPABASE
-// =====================================
+const matlabFileCount =
+    document.getElementById(
+        "matlabFileCount"
+    );
 
-async function loadCadRecords() {
+
+const meetingFileCount =
+    document.getElementById(
+        "meetingFileCount"
+    );
+
+
+const fileMessage =
+    document.getElementById(
+        "fileMessage"
+    );
+
+
+const fileSearchInput =
+    document.getElementById(
+        "fileSearchInput"
+    );
+
+
+const fileCategoryFilter =
+    document.getElementById(
+        "fileCategoryFilter"
+    );
+
+
+// ============================================
+// LOAD FILE METADATA
+// ============================================
+
+async function loadProjectFiles() {
 
     showMessage(
-        "Loading shared CAD records...",
+        "Loading shared project files...",
         false
     );
 
@@ -134,12 +163,14 @@ async function loadCadRecords() {
     } =
         await aquiferSupabase
 
-            .from("cad_records")
+            .from(
+                "project_files"
+            )
 
             .select("*")
 
             .order(
-                "created_at",
+                "uploaded_at",
                 {
                     ascending: false
                 }
@@ -149,13 +180,13 @@ async function loadCadRecords() {
     if (error) {
 
         console.error(
-            "Could not load CAD records:",
+            "Could not load project files:",
             error
         );
 
 
         showMessage(
-            "Could not load the shared CAD library.",
+            "Could not load the shared file library.",
             true
         );
 
@@ -165,54 +196,62 @@ async function loadCadRecords() {
     }
 
 
-    cadRecords =
+    projectFiles =
         data || [];
 
 
     hideMessage();
 
 
-    renderCadRecords();
+    renderSummary();
+
+    renderFiles();
 
 }
 
 
-// =====================================
-// OPEN ADD CAD MODAL
-// =====================================
+// ============================================
+// OPEN ADD FILE MODAL
+// ============================================
 
-addCadButton.addEventListener(
+addFileButton.addEventListener(
     "click",
     function () {
 
-        selectedCadId =
+        selectedFileId =
             null;
 
 
-        cadModalTitle.textContent =
-            "Add CAD Record";
+        fileForm.reset();
 
 
-        saveCadButton.textContent =
-            "Save Record";
+        fileModalTitle.textContent =
+            "Add File";
 
 
-        cadForm.reset();
+        saveFileButton.textContent =
+            "Upload File";
+
+
+        actualFileSection.style.display =
+            "block";
+
+
+        actualFileInput.required =
+            true;
+
+
+        existingFileInfo.style.display =
+            "none";
 
 
         document.getElementById(
-            "cadType"
+            "fileCategory"
         ).value =
-            "Part";
+            "CAD File";
 
 
-        document.getElementById(
-            "cadStatus"
-        ).value =
-            "In Design";
-
-
-        cadModal.classList.add(
+        fileModal.classList.add(
             "show"
         );
 
@@ -220,310 +259,414 @@ addCadButton.addEventListener(
 );
 
 
-// =====================================
-// OPEN EDIT CAD MODAL
-// =====================================
+// ============================================
+// OPEN EDIT FILE METADATA
+// ============================================
 
-function editCadRecord(
-    recordId
+function editFile(
+    fileId
 ) {
 
-    const record =
-        cadRecords.find(
-            record =>
-                record.id ===
-                recordId
+    const fileRecord =
+        projectFiles.find(
+            file =>
+                file.id ===
+                fileId
         );
 
 
-    if (!record) {
+    if (!fileRecord) {
 
         return;
 
     }
 
 
-    selectedCadId =
-        recordId;
+    selectedFileId =
+        fileId;
 
 
-    cadModalTitle.textContent =
-        "Edit CAD Record";
+    fileModalTitle.textContent =
+        "Edit File Information";
 
 
-    saveCadButton.textContent =
+    saveFileButton.textContent =
         "Save Changes";
 
 
     document.getElementById(
-        "cadName"
+        "fileDisplayName"
     ).value =
-        record.name || "";
+        fileRecord.display_name || "";
 
 
     document.getElementById(
-        "cadType"
+        "fileCategory"
     ).value =
-        record.type || "Part";
+        fileRecord.category || "Other";
 
 
     document.getElementById(
-        "cadRevision"
+        "fileOwner"
     ).value =
-        record.revision || "";
+        fileRecord.owner || "";
 
 
     document.getElementById(
-        "cadOwner"
+        "fileRevision"
     ).value =
-        record.owner || "";
+        fileRecord.revision || "";
 
 
     document.getElementById(
-        "cadStatus"
+        "fileRelatedTo"
     ).value =
-        record.status || "In Design";
+        fileRecord.related_to || "";
 
 
     document.getElementById(
-        "cadFileName"
+        "fileDescription"
     ).value =
-        record.file_name || "";
+        fileRecord.description || "";
 
 
-    document.getElementById(
-        "cadNotes"
-    ).value =
-        record.notes || "";
+    // Do not replace the engineering file
+    // during a metadata edit.
+
+    actualFileSection.style.display =
+        "none";
 
 
-    cadModal.classList.add(
+    actualFileInput.required =
+        false;
+
+
+    existingFileInfo.style.display =
+        "block";
+
+
+    existingFileInfo.textContent =
+        "Current file: "
+        +
+        fileRecord.file_name
+        +
+        ". Editing this record changes only its information, not the uploaded file.";
+
+
+    fileModal.classList.add(
         "show"
     );
 
 }
 
 
-// =====================================
+// ============================================
 // CLOSE MODAL
-// =====================================
+// ============================================
 
-function closeCadEditor() {
+function closeFileEditor() {
 
-    cadModal.classList.remove(
+    fileModal.classList.remove(
         "show"
     );
 
 
-    cadForm.reset();
+    fileForm.reset();
 
 
-    selectedCadId =
+    selectedFileId =
         null;
 
+
+    actualFileInput.required =
+        false;
+
+
+    actualFileSection.style.display =
+        "block";
+
+
+    existingFileInfo.style.display =
+        "none";
+
 }
 
 
-closeCadModal.addEventListener(
+closeFileModal.addEventListener(
     "click",
-    closeCadEditor
+    closeFileEditor
 );
 
 
-cancelCadButton.addEventListener(
+cancelFileButton.addEventListener(
     "click",
-    closeCadEditor
+    closeFileEditor
 );
 
 
-// =====================================
-// SAVE CAD RECORD
-// ADD OR EDIT
-// =====================================
+// ============================================
+// SAVE FILE
+// ============================================
 
-cadForm.addEventListener(
+fileForm.addEventListener(
     "submit",
     async function (event) {
 
         event.preventDefault();
 
 
-        const name =
+        const displayName =
             document
                 .getElementById(
-                    "cadName"
+                    "fileDisplayName"
                 )
                 .value
                 .trim();
 
 
-        const type =
+        const category =
             document
                 .getElementById(
-                    "cadType"
+                    "fileCategory"
                 )
                 .value;
-
-
-        const revision =
-            document
-                .getElementById(
-                    "cadRevision"
-                )
-                .value
-                .trim();
 
 
         const owner =
             document
                 .getElementById(
-                    "cadOwner"
+                    "fileOwner"
                 )
                 .value
                 .trim();
 
 
-        const status =
+        const revision =
             document
                 .getElementById(
-                    "cadStatus"
-                )
-                .value;
-
-
-        const fileName =
-            document
-                .getElementById(
-                    "cadFileName"
+                    "fileRevision"
                 )
                 .value
                 .trim();
 
 
-        const notes =
+        const relatedTo =
             document
                 .getElementById(
-                    "cadNotes"
+                    "fileRelatedTo"
                 )
                 .value
                 .trim();
 
 
-        if (!name) {
+        const description =
+            document
+                .getElementById(
+                    "fileDescription"
+                )
+                .value
+                .trim();
+
+
+        if (!displayName) {
 
             return;
 
         }
 
 
-        saveCadButton.disabled =
+        saveFileButton.disabled =
             true;
 
 
-        saveCadButton.textContent =
-            "Saving...";
+        saveFileButton.textContent =
+            selectedFileId
+            ? "Saving..."
+            : "Uploading...";
 
 
-        const cadData = {
+        // ====================================
+        // EDIT METADATA ONLY
+        // ====================================
 
-            name:
-                name,
+        if (selectedFileId) {
 
-            type:
-                type,
-
-            revision:
-                revision || null,
-
-            owner:
-                owner || null,
-
-            status:
-                status,
-
-            file_name:
-                fileName || null,
-
-            notes:
-                notes || null
-
-        };
-
-
-        let error;
-
-
-        // ---------------------------------
-        // EDIT EXISTING RECORD
-        // ---------------------------------
-
-        if (selectedCadId) {
-
-            const result =
+            const {
+                error
+            } =
                 await aquiferSupabase
 
-                    .from("cad_records")
-
-                    .update(
-                        cadData
+                    .from(
+                        "project_files"
                     )
+
+                    .update({
+
+                        display_name:
+                            displayName,
+
+                        category:
+                            category,
+
+                        owner:
+                            owner || null,
+
+                        revision:
+                            revision || null,
+
+                        related_to:
+                            relatedTo || null,
+
+                        description:
+                            description || null
+
+                    })
 
                     .eq(
                         "id",
-                        selectedCadId
+                        selectedFileId
                     );
 
 
-            error =
-                result.error;
+            saveFileButton.disabled =
+                false;
+
+
+            saveFileButton.textContent =
+                "Save Changes";
+
+
+            if (error) {
+
+                console.error(
+                    "Could not update file information:",
+                    error
+                );
+
+
+                showMessage(
+                    "The file information could not be updated.",
+                    true
+                );
+
+
+                return;
+
+            }
+
+
+            closeFileEditor();
+
+
+            await loadProjectFiles();
+
+
+            return;
 
         }
 
 
-        // ---------------------------------
-        // CREATE NEW RECORD
-        // ---------------------------------
+        // ====================================
+        // NEW ACTUAL FILE UPLOAD
+        // ====================================
 
-        else {
-
-            const result =
-                await aquiferSupabase
-
-                    .from("cad_records")
-
-                    .insert(
-                        cadData
-                    );
+        const actualFile =
+            actualFileInput.files[0];
 
 
-            error =
-                result.error;
+        if (!actualFile) {
 
-        }
-
-
-        saveCadButton.disabled =
-            false;
+            saveFileButton.disabled =
+                false;
 
 
-        if (error) {
-
-            console.error(
-                "Could not save CAD record:",
-                error
-            );
+            saveFileButton.textContent =
+                "Upload File";
 
 
             showMessage(
-                "The CAD record could not be saved.",
+                "Choose a file to upload.",
                 true
             );
 
 
-            saveCadButton.textContent =
-                selectedCadId
-                ? "Save Changes"
-                : "Save Record";
+            return;
+
+        }
+
+
+        const safeFileName =
+            sanitizeFileName(
+                actualFile.name
+            );
+
+
+        const categoryFolder =
+            sanitizeFolderName(
+                category
+            );
+
+
+        const uniqueId =
+            crypto.randomUUID();
+
+
+        const storagePath =
+            categoryFolder
+            +
+            "/"
+            +
+            uniqueId
+            +
+            "-"
+            +
+            safeFileName;
+
+
+        // ------------------------------------
+        // UPLOAD ACTUAL FILE TO STORAGE
+        // ------------------------------------
+
+        const {
+            error: uploadError
+        } =
+            await aquiferSupabase
+
+                .storage
+
+                .from(
+                    STORAGE_BUCKET
+                )
+
+                .upload(
+                    storagePath,
+                    actualFile,
+                    {
+                        upsert: false
+                    }
+                );
+
+
+        if (uploadError) {
+
+            console.error(
+                "Could not upload file:",
+                uploadError
+            );
+
+
+            saveFileButton.disabled =
+                false;
+
+
+            saveFileButton.textContent =
+                "Upload File";
+
+
+            showMessage(
+                "The actual file could not be uploaded.",
+                true
+            );
 
 
             return;
@@ -531,26 +674,254 @@ cadForm.addEventListener(
         }
 
 
-        closeCadEditor();
+        // ------------------------------------
+        // SAVE FILE INFORMATION
+        // ------------------------------------
+
+        const {
+            error: databaseError
+        } =
+            await aquiferSupabase
+
+                .from(
+                    "project_files"
+                )
+
+                .insert({
+
+                    display_name:
+                        displayName,
+
+                    category:
+                        category,
+
+                    file_name:
+                        actualFile.name,
+
+                    storage_path:
+                        storagePath,
+
+                    owner:
+                        owner || null,
+
+                    revision:
+                        revision || null,
+
+                    related_to:
+                        relatedTo || null,
+
+                    description:
+                        description || null,
+
+                    mime_type:
+                        actualFile.type || null,
+
+                    file_size:
+                        actualFile.size
+
+                });
 
 
-        await loadCadRecords();
+        // If metadata failed,
+        // remove the uploaded orphan file.
+
+        if (databaseError) {
+
+            console.error(
+                "Could not save file information:",
+                databaseError
+            );
+
+
+            await aquiferSupabase
+
+                .storage
+
+                .from(
+                    STORAGE_BUCKET
+                )
+
+                .remove([
+                    storagePath
+                ]);
+
+
+            saveFileButton.disabled =
+                false;
+
+
+            saveFileButton.textContent =
+                "Upload File";
+
+
+            showMessage(
+                "The file was uploaded, but its project record could not be created. The upload was rolled back.",
+                true
+            );
+
+
+            return;
+
+        }
+
+
+        saveFileButton.disabled =
+            false;
+
+
+        saveFileButton.textContent =
+            "Upload File";
+
+
+        closeFileEditor();
+
+
+        await loadProjectFiles();
 
     }
 );
 
 
-// =====================================
-// DELETE CAD RECORD
-// =====================================
+// ============================================
+// DOWNLOAD ACTUAL FILE
+// ============================================
 
-async function deleteCadRecord(
-    recordId
+async function downloadFile(
+    fileId
 ) {
+
+    const fileRecord =
+        projectFiles.find(
+            file =>
+                file.id ===
+                fileId
+        );
+
+
+    if (!fileRecord) {
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Preparing "
+        +
+        fileRecord.file_name
+        +
+        "...",
+        false
+    );
+
+
+    const {
+        data,
+        error
+    } =
+        await aquiferSupabase
+
+            .storage
+
+            .from(
+                STORAGE_BUCKET
+            )
+
+            .download(
+                fileRecord.storage_path
+            );
+
+
+    if (error) {
+
+        console.error(
+            "Could not download file:",
+            error
+        );
+
+
+        showMessage(
+            "The file could not be downloaded.",
+            true
+        );
+
+
+        return;
+
+    }
+
+
+    const objectUrl =
+        URL.createObjectURL(
+            data
+        );
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.href =
+        objectUrl;
+
+
+    link.download =
+        fileRecord.file_name;
+
+
+    document.body.appendChild(
+        link
+    );
+
+
+    link.click();
+
+
+    link.remove();
+
+
+    URL.revokeObjectURL(
+        objectUrl
+    );
+
+
+    hideMessage();
+
+}
+
+
+// ============================================
+// DELETE FILE
+// ============================================
+
+async function deleteFile(
+    fileId
+) {
+
+    const fileRecord =
+        projectFiles.find(
+            file =>
+                file.id ===
+                fileId
+        );
+
+
+    if (!fileRecord) {
+
+        return;
+
+    }
+
 
     const confirmed =
         confirm(
-            "Delete this CAD record?"
+            "Delete \""
+            +
+            fileRecord.display_name
+            +
+            "\"?\n\nThis will remove the actual uploaded file and its project record."
         );
 
 
@@ -561,31 +932,36 @@ async function deleteCadRecord(
     }
 
 
+    // ------------------------------------
+    // REMOVE ACTUAL STORAGE FILE
+    // ------------------------------------
+
     const {
-        error
+        error: storageError
     } =
         await aquiferSupabase
 
-            .from("cad_records")
+            .storage
 
-            .delete()
+            .from(
+                STORAGE_BUCKET
+            )
 
-            .eq(
-                "id",
-                recordId
-            );
+            .remove([
+                fileRecord.storage_path
+            ]);
 
 
-    if (error) {
+    if (storageError) {
 
         console.error(
-            "Could not delete CAD record:",
-            error
+            "Could not delete stored file:",
+            storageError
         );
 
 
         showMessage(
-            "The CAD record could not be deleted.",
+            "The actual file could not be deleted.",
             true
         );
 
@@ -595,57 +971,39 @@ async function deleteCadRecord(
     }
 
 
-    await loadCadRecords();
+    // ------------------------------------
+    // REMOVE DATABASE RECORD
+    // ------------------------------------
 
-}
+    const {
+        error: databaseError
+    } =
+        await aquiferSupabase
 
+            .from(
+                "project_files"
+            )
 
-// =====================================
-// RENDER CAD LIBRARY
-// =====================================
+            .delete()
 
-function renderCadRecords() {
-
-    cadTableBody.innerHTML =
-        "";
-
-
-    // TOTAL CAD RECORDS
-
-    cadRecordCount.textContent =
-        cadRecords.length;
-
-
-    // ASSEMBLY COUNT
-
-    assemblyCount.textContent =
-        cadRecords.filter(
-            record =>
-                record.type ===
-                "Assembly"
-        ).length;
+            .eq(
+                "id",
+                fileId
+            );
 
 
-    // EMPTY STATE
+    if (databaseError) {
 
-    if (
-        cadRecords.length === 0
-    ) {
-
-        cadEmptyState.style.display =
-            "block";
+        console.error(
+            "Could not delete file record:",
+            databaseError
+        );
 
 
-        cadTableWrapper.style.display =
-            "none";
-
-
-        latestRevision.textContent =
-            "—";
-
-
-        latestRevisionInfo.textContent =
-            "No CAD records";
+        showMessage(
+            "The stored file was removed, but its database record could not be deleted.",
+            true
+        );
 
 
         return;
@@ -653,38 +1011,179 @@ function renderCadRecords() {
     }
 
 
-    cadEmptyState.style.display =
-        "none";
+    await loadProjectFiles();
+
+}
 
 
-    cadTableWrapper.style.display =
+// ============================================
+// SUMMARY CARDS
+// ============================================
+
+function renderSummary() {
+
+    totalFileCount.textContent =
+        projectFiles.length;
+
+
+    cadFileCount.textContent =
+        projectFiles.filter(
+            file =>
+                file.category ===
+                "CAD File"
+        ).length;
+
+
+    matlabFileCount.textContent =
+        projectFiles.filter(
+            file =>
+                file.category ===
+                "MATLAB / Simulink"
+        ).length;
+
+
+    meetingFileCount.textContent =
+        projectFiles.filter(
+            file =>
+                file.category ===
+                "Meeting Notes"
+        ).length;
+
+}
+
+
+// ============================================
+// FILTER + RENDER
+// ============================================
+
+function renderFiles() {
+
+    const searchTerm =
+        fileSearchInput
+            .value
+            .trim()
+            .toLowerCase();
+
+
+    const selectedCategory =
+        fileCategoryFilter.value;
+
+
+    const filteredFiles =
+        projectFiles.filter(
+            function (file) {
+
+                const matchesCategory =
+                    selectedCategory === "all"
+                    ||
+                    file.category ===
+                    selectedCategory;
+
+
+                const searchableText = [
+
+                    file.display_name,
+                    file.file_name,
+                    file.category,
+                    file.owner,
+                    file.revision,
+                    file.related_to,
+                    file.description
+
+                ]
+                    .filter(Boolean)
+                    .join(" ")
+                    .toLowerCase();
+
+
+                const matchesSearch =
+                    searchableText.includes(
+                        searchTerm
+                    );
+
+
+                return (
+                    matchesCategory
+                    &&
+                    matchesSearch
+                );
+
+            }
+        );
+
+
+    fileTableBody.innerHTML =
+        "";
+
+
+    // ------------------------------------
+    // EMPTY STATE
+    // ------------------------------------
+
+    if (
+        filteredFiles.length === 0
+    ) {
+
+        fileTableWrapper.style.display =
+            "none";
+
+
+        fileEmptyState.style.display =
+            "block";
+
+
+        if (
+            projectFiles.length === 0
+        ) {
+
+            fileEmptyState
+                .querySelector("h3")
+                .textContent =
+                "No project files yet";
+
+
+            fileEmptyState
+                .querySelector("p")
+                .textContent =
+                "Upload your first CAD model, simulation, meeting document, test spreadsheet, or report.";
+
+        }
+
+        else {
+
+            fileEmptyState
+                .querySelector("h3")
+                .textContent =
+                "No matching files";
+
+
+            fileEmptyState
+                .querySelector("p")
+                .textContent =
+                "Try changing your search or category filter.";
+
+        }
+
+
+        return;
+
+    }
+
+
+    fileTableWrapper.style.display =
         "block";
 
 
-    // ---------------------------------
-    // LATEST RECORD
-    // ---------------------------------
-
-    const newest =
-        cadRecords[0];
+    fileEmptyState.style.display =
+        "none";
 
 
-    latestRevision.textContent =
-        newest.revision
-        ||
-        "No Rev";
+    // ------------------------------------
+    // ROWS
+    // ------------------------------------
 
-
-    latestRevisionInfo.textContent =
-        newest.name;
-
-
-    // ---------------------------------
-    // TABLE
-    // ---------------------------------
-
-    cadRecords.forEach(
-        function (record) {
+    filteredFiles.forEach(
+        function (file) {
 
             const row =
                 document.createElement(
@@ -692,77 +1191,98 @@ function renderCadRecords() {
                 );
 
 
-            // NAME
+            // ==============================
+            // FILE
+            // ==============================
 
-            const nameCell =
+            const fileCell =
                 document.createElement(
                     "td"
                 );
 
 
-            const name =
+            const displayName =
                 document.createElement(
                     "strong"
                 );
 
 
-            name.textContent =
-                record.name;
+            displayName.textContent =
+                file.display_name;
 
 
-            const fileName =
+            const actualName =
                 document.createElement(
                     "span"
                 );
 
 
-            fileName.className =
+            actualName.className =
                 "table-note";
 
 
-            fileName.textContent =
-                record.file_name
-                ||
-                "No filename";
+            actualName.textContent =
+                file.file_name;
 
 
-            nameCell.appendChild(
-                name
+            fileCell.appendChild(
+                displayName
             );
 
 
-            nameCell.appendChild(
-                fileName
+            fileCell.appendChild(
+                actualName
             );
 
 
-            // TYPE
+            // ==============================
+            // CATEGORY
+            // ==============================
 
-            const typeCell =
+            const categoryCell =
                 document.createElement(
                     "td"
                 );
 
 
-            typeCell.textContent =
-                record.type;
+            const categoryTag =
+                document.createElement(
+                    "span"
+                );
 
 
-            // REVISION
+            categoryTag.className =
+                "status-tag";
 
-            const revisionCell =
+
+            categoryTag.textContent =
+                file.category;
+
+
+            categoryCell.appendChild(
+                categoryTag
+            );
+
+
+            // ==============================
+            // RELATED TO
+            // ==============================
+
+            const relatedCell =
                 document.createElement(
                     "td"
                 );
 
 
-            revisionCell.textContent =
-                record.revision
+            relatedCell.textContent =
+                file.related_to
                 ||
                 "—";
 
 
+            // ==============================
             // OWNER
+            // ==============================
 
             const ownerCell =
                 document.createElement(
@@ -771,39 +1291,62 @@ function renderCadRecords() {
 
 
             ownerCell.textContent =
-                record.owner
+                file.owner
                 ||
                 "—";
 
 
-            // STATUS
+            // ==============================
+            // REVISION
+            // ==============================
 
-            const statusCell =
+            const revisionCell =
                 document.createElement(
                     "td"
                 );
 
 
-            const statusTag =
+            revisionCell.textContent =
+                file.revision
+                ||
+                "—";
+
+
+            // ==============================
+            // SIZE
+            // ==============================
+
+            const sizeCell =
                 document.createElement(
-                    "span"
+                    "td"
                 );
 
 
-            statusTag.className =
-                "status-tag";
+            sizeCell.textContent =
+                formatFileSize(
+                    file.file_size
+                );
 
 
-            statusTag.textContent =
-                record.status;
+            // ==============================
+            // UPLOADED DATE
+            // ==============================
+
+            const uploadedCell =
+                document.createElement(
+                    "td"
+                );
 
 
-            statusCell.appendChild(
-                statusTag
-            );
+            uploadedCell.textContent =
+                formatUploadDate(
+                    file.uploaded_at
+                );
 
 
+            // ==============================
             // ACTIONS
+            // ==============================
 
             const actionsCell =
                 document.createElement(
@@ -820,6 +1363,36 @@ function renderCadRecords() {
             actions.className =
                 "task-actions";
 
+
+            // DOWNLOAD
+
+            const downloadButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            downloadButton.className =
+                "task-button";
+
+
+            downloadButton.textContent =
+                "Download";
+
+
+            downloadButton.addEventListener(
+                "click",
+                function () {
+
+                    downloadFile(
+                        file.id
+                    );
+
+                }
+            );
+
+
+            // EDIT
 
             const editButton =
                 document.createElement(
@@ -839,13 +1412,15 @@ function renderCadRecords() {
                 "click",
                 function () {
 
-                    editCadRecord(
-                        record.id
+                    editFile(
+                        file.id
                     );
 
                 }
             );
 
+
+            // DELETE
 
             const deleteButton =
                 document.createElement(
@@ -865,11 +1440,16 @@ function renderCadRecords() {
                 "click",
                 function () {
 
-                    deleteCadRecord(
-                        record.id
+                    deleteFile(
+                        file.id
                     );
 
                 }
+            );
+
+
+            actions.appendChild(
+                downloadButton
             );
 
 
@@ -888,20 +1468,22 @@ function renderCadRecords() {
             );
 
 
-            // ADD CELLS TO ROW
+            // ==============================
+            // ADD CELLS
+            // ==============================
 
             row.appendChild(
-                nameCell
+                fileCell
             );
 
 
             row.appendChild(
-                typeCell
+                categoryCell
             );
 
 
             row.appendChild(
-                revisionCell
+                relatedCell
             );
 
 
@@ -911,7 +1493,17 @@ function renderCadRecords() {
 
 
             row.appendChild(
-                statusCell
+                revisionCell
+            );
+
+
+            row.appendChild(
+                sizeCell
+            );
+
+
+            row.appendChild(
+                uploadedCell
             );
 
 
@@ -920,9 +1512,7 @@ function renderCadRecords() {
             );
 
 
-            // ADD ROW TO TABLE
-
-            cadTableBody.appendChild(
+            fileTableBody.appendChild(
                 row
             );
 
@@ -932,24 +1522,212 @@ function renderCadRecords() {
 }
 
 
-// =====================================
+// ============================================
+// SEARCH / FILTER EVENTS
+// ============================================
+
+fileSearchInput.addEventListener(
+    "input",
+    renderFiles
+);
+
+
+fileCategoryFilter.addEventListener(
+    "change",
+    renderFiles
+);
+
+
+// ============================================
+// FILE NAME SANITIZER
+// ============================================
+
+function sanitizeFileName(
+    fileName
+) {
+
+    return fileName
+
+        .replace(
+            /[^a-zA-Z0-9._-]/g,
+            "_"
+        )
+
+        .replace(
+            /_+/g,
+            "_"
+        );
+
+}
+
+
+// ============================================
+// CATEGORY FOLDER NAME
+// ============================================
+
+function sanitizeFolderName(
+    category
+) {
+
+    return category
+
+        .toLowerCase()
+
+        .replace(
+            /[^a-z0-9]+/g,
+            "-"
+        )
+
+        .replace(
+            /^-|-$/g,
+            ""
+        );
+
+}
+
+
+// ============================================
+// FILE SIZE
+// ============================================
+
+function formatFileSize(
+    bytes
+) {
+
+    const size =
+        Number(bytes || 0);
+
+
+    if (size === 0) {
+
+        return "0 B";
+
+    }
+
+
+    if (size < 1024) {
+
+        return (
+            size
+            +
+            " B"
+        );
+
+    }
+
+
+    if (
+        size <
+        1024 * 1024
+    ) {
+
+        return (
+            (
+                size / 1024
+            )
+            .toFixed(1)
+            +
+            " KB"
+        );
+
+    }
+
+
+    if (
+        size <
+        1024 * 1024 * 1024
+    ) {
+
+        return (
+            (
+                size /
+                (
+                    1024 * 1024
+                )
+            )
+            .toFixed(1)
+            +
+            " MB"
+        );
+
+    }
+
+
+    return (
+        (
+            size /
+            (
+                1024
+                *
+                1024
+                *
+                1024
+            )
+        )
+        .toFixed(2)
+        +
+        " GB"
+    );
+
+}
+
+
+// ============================================
+// UPLOAD DATE
+// ============================================
+
+function formatUploadDate(
+    timestamp
+) {
+
+    if (!timestamp) {
+
+        return "—";
+
+    }
+
+
+    const date =
+        new Date(
+            timestamp
+        );
+
+
+    return date.toLocaleDateString(
+        "en-US",
+        {
+            month:
+                "short",
+
+            day:
+                "numeric",
+
+            year:
+                "numeric"
+        }
+    );
+
+}
+
+
+// ============================================
 // MESSAGE
-// =====================================
+// ============================================
 
 function showMessage(
     message,
     isError
 ) {
 
-    cadMessage.style.display =
+    fileMessage.style.display =
         "block";
 
 
-    cadMessage.textContent =
+    fileMessage.textContent =
         message;
 
 
-    cadMessage.style.color =
+    fileMessage.style.color =
         isError
         ? "#8a3e3e"
         : "#5f6b75";
@@ -959,29 +1737,29 @@ function showMessage(
 
 function hideMessage() {
 
-    cadMessage.style.display =
+    fileMessage.style.display =
         "none";
 
 }
 
 
-// =====================================
+// ============================================
 // REFRESH
-// =====================================
+// ============================================
 
-refreshCadButton.addEventListener(
+refreshFilesButton.addEventListener(
     "click",
-    loadCadRecords
+    loadProjectFiles
 );
 
 
-// =====================================
+// ============================================
 // START
-// =====================================
+// ============================================
 
-loadCadRecords();
+loadProjectFiles();
 
 
 console.log(
-    "Aquifer shared CAD Library loaded."
+    "Aquifer shared Project Files library loaded."
 );

@@ -5,26 +5,43 @@
 // =====================================
 
 
-const PROJECT_BUDGET = 6000;
+const PROJECT_BUDGET =
+    6000;
 
 
-// DATA
+// =====================================
+// SHARED DATA
+// =====================================
 
 let tasks = [];
+
 let meetings = [];
+
 let components = [];
-let cadRecords = [];
+
+let projectFiles = [];
+
 
 let project = {
-    id: 1,
-    phase: "Concept Development",
-    progress: 5
+
+    id:
+        1,
+
+    phase:
+        "Concept Development",
+
+    progress:
+        5
+
 };
 
 
 // =====================================
-// ELEMENTS
+// HTML ELEMENTS
 // =====================================
+
+
+// PROJECT
 
 const projectPhase =
     document.getElementById(
@@ -44,6 +61,8 @@ const projectProgressBar =
     );
 
 
+// BUDGET
+
 const budgetUsed =
     document.getElementById(
         "budgetUsed"
@@ -55,6 +74,8 @@ const budgetRemaining =
         "budgetRemaining"
     );
 
+
+// TASKS
 
 const openTaskCount =
     document.getElementById(
@@ -74,6 +95,8 @@ const emptyState =
     );
 
 
+// MEETINGS
+
 const nextMeetingDate =
     document.getElementById(
         "nextMeetingDate"
@@ -86,9 +109,11 @@ const nextMeetingInfo =
     );
 
 
-const cadCount =
+// PROJECT LIBRARY
+
+const fileCount =
     document.getElementById(
-        "cadCount"
+        "fileCount"
     );
 
 
@@ -103,6 +128,8 @@ const completedMeetingCount =
         "completedMeetingCount"
     );
 
+
+// PROJECT EDITOR
 
 const editProjectButton =
     document.getElementById(
@@ -140,6 +167,8 @@ const saveProjectButton =
     );
 
 
+// DASHBOARD
+
 const refreshDashboardButton =
     document.getElementById(
         "refreshDashboardButton"
@@ -176,12 +205,13 @@ async function loadDashboard() {
 
             loadComponents(),
 
-            loadCadRecords()
+            loadProjectFiles()
 
         ]);
 
 
         renderDashboard();
+
 
         hideMessage();
 
@@ -206,7 +236,7 @@ async function loadDashboard() {
 
 
 // =====================================
-// LOAD PROJECT
+// PROJECT SETTINGS
 // =====================================
 
 async function loadProject() {
@@ -232,17 +262,20 @@ async function loadProject() {
 
 
     if (error) {
+
         throw error;
+
     }
 
 
-    project = data;
+    project =
+        data;
 
 }
 
 
 // =====================================
-// LOAD TASKS
+// TASKS
 // =====================================
 
 async function loadTasks() {
@@ -253,20 +286,25 @@ async function loadTasks() {
     } =
         await aquiferSupabase
 
-            .from("tasks")
+            .from(
+                "tasks"
+            )
 
             .select("*")
 
             .order(
                 "created_at",
                 {
-                    ascending: false
+                    ascending:
+                        false
                 }
             );
 
 
     if (error) {
+
         throw error;
+
     }
 
 
@@ -277,7 +315,7 @@ async function loadTasks() {
 
 
 // =====================================
-// LOAD MEETINGS
+// MEETINGS
 // =====================================
 
 async function loadMeetings() {
@@ -288,13 +326,17 @@ async function loadMeetings() {
     } =
         await aquiferSupabase
 
-            .from("meetings")
+            .from(
+                "meetings"
+            )
 
             .select("*");
 
 
     if (error) {
+
         throw error;
+
     }
 
 
@@ -305,7 +347,7 @@ async function loadMeetings() {
 
 
 // =====================================
-// LOAD COMPONENTS
+// COMPONENTS
 // =====================================
 
 async function loadComponents() {
@@ -316,13 +358,17 @@ async function loadComponents() {
     } =
         await aquiferSupabase
 
-            .from("components")
+            .from(
+                "components"
+            )
 
             .select("*");
 
 
     if (error) {
+
         throw error;
+
     }
 
 
@@ -333,10 +379,10 @@ async function loadComponents() {
 
 
 // =====================================
-// LOAD CAD
+// PROJECT FILES
 // =====================================
 
-async function loadCadRecords() {
+async function loadProjectFiles() {
 
     const {
         data,
@@ -344,17 +390,23 @@ async function loadCadRecords() {
     } =
         await aquiferSupabase
 
-            .from("cad_records")
+            .from(
+                "project_files"
+            )
 
-            .select("*");
+            .select(
+                "id"
+            );
 
 
     if (error) {
+
         throw error;
+
     }
 
 
-    cadRecords =
+    projectFiles =
         data || [];
 
 }
@@ -390,11 +442,15 @@ function renderProject() {
 
 
     projectProgress.textContent =
-        project.progress + "%";
+        project.progress
+        +
+        "%";
 
 
     projectProgressBar.style.width =
-        project.progress + "%";
+        project.progress
+        +
+        "%";
 
 }
 
@@ -427,6 +483,7 @@ function renderTasks() {
         emptyState.style.display =
             "block";
 
+
         return;
 
     }
@@ -437,7 +494,12 @@ function renderTasks() {
 
 
     openTasks
-        .slice(0, 5)
+
+        .slice(
+            0,
+            5
+        )
+
         .forEach(
             function (task) {
 
@@ -483,8 +545,11 @@ function renderTasks() {
 
                 const assignee =
                     task.assignee
-                    ? "Assigned to " +
+
+                    ? "Assigned to "
+                      +
                       task.assignee
+
                     : "Unassigned";
 
 
@@ -550,32 +615,41 @@ function renderBudget() {
 
     const total =
         components.reduce(
+
             function (
                 sum,
                 component
             ) {
 
                 return (
+
                     sum
+
                     +
+
                     (
                         Number(
                             component.quantity
                         )
+
                         *
+
                         Number(
                             component.unit_cost
                         )
                     )
+
                 );
 
             },
+
             0
         );
 
 
     const remaining =
-        PROJECT_BUDGET -
+        PROJECT_BUDGET
+        -
         total;
 
 
@@ -620,11 +694,17 @@ function renderNextMeeting() {
 
                         dateTime:
                             new Date(
+
                                 meeting.meeting_date
+
                                 +
+
                                 "T"
+
                                 +
+
                                 meeting.meeting_time
+
                             )
 
                     };
@@ -634,13 +714,18 @@ function renderNextMeeting() {
 
             .filter(
                 meeting =>
-                    meeting.dateTime >=
+                    meeting.dateTime
+                    >=
                     now
             )
 
             .sort(
-                (a, b) =>
-                    a.dateTime -
+                (
+                    a,
+                    b
+                ) =>
+                    a.dateTime
+                    -
                     b.dateTime
             );
 
@@ -671,8 +756,11 @@ function renderNextMeeting() {
             .toLocaleDateString(
                 "en-US",
                 {
-                    month: "short",
-                    day: "numeric"
+                    month:
+                        "short",
+
+                    day:
+                        "numeric"
                 }
             );
 
@@ -682,32 +770,39 @@ function renderNextMeeting() {
             .toLocaleTimeString(
                 "en-US",
                 {
-                    hour: "numeric",
-                    minute: "2-digit"
+                    hour:
+                        "numeric",
+
+                    minute:
+                        "2-digit"
                 }
             );
 
 
     nextMeetingInfo.textContent =
-        next.title +
-        " · " +
+        next.title
+        +
+        " · "
+        +
         time;
 
 }
 
 
 // =====================================
-// COUNTERS
+// PROJECT LIBRARY COUNTS
 // =====================================
 
 function renderCounts() {
 
-    cadCount.textContent =
-        cadRecords.length
+    fileCount.textContent =
+        projectFiles.length
         +
         (
-            cadRecords.length === 1
+            projectFiles.length === 1
+
             ? " file"
+
             : " files"
         );
 
@@ -717,7 +812,9 @@ function renderCounts() {
         +
         (
             components.length === 1
+
             ? " component"
+
             : " components"
         );
 
@@ -738,7 +835,7 @@ function renderCounts() {
 
 
 // =====================================
-// PROJECT EDITOR
+// OPEN PROJECT EDITOR
 // =====================================
 
 editProjectButton.addEventListener(
@@ -764,6 +861,10 @@ editProjectButton.addEventListener(
     }
 );
 
+
+// =====================================
+// CLOSE PROJECT EDITOR
+// =====================================
 
 function closeProjectEditor() {
 
@@ -926,7 +1027,8 @@ function formatDate(
 
     const date =
         new Date(
-            dateString +
+            dateString
+            +
             "T00:00:00"
         );
 
@@ -934,9 +1036,14 @@ function formatDate(
     return date.toLocaleDateString(
         "en-US",
         {
-            month: "short",
-            day: "numeric",
-            year: "numeric"
+            month:
+                "short",
+
+            day:
+                "numeric",
+
+            year:
+                "numeric"
         }
     );
 
@@ -950,9 +1057,14 @@ function formatMoney(
     return value.toLocaleString(
         "en-US",
         {
-            style: "currency",
-            currency: "USD",
-            maximumFractionDigits: 2
+            style:
+                "currency",
+
+            currency:
+                "USD",
+
+            maximumFractionDigits:
+                2
         }
     );
 
@@ -978,7 +1090,9 @@ function showMessage(
 
     dashboardMessage.style.color =
         isError
+
         ? "#8a3e3e"
+
         : "#5f6b75";
 
 }

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,33 +11,44 @@
     >
 
     <title>
-        CAD Library | Project Aquifer
+        Project Files | Project Aquifer
     </title>
 
     <link
         rel="stylesheet"
         href="style.css"
     >
+
 </head>
 
 
 <body>
 
-    <!-- NAVIGATION -->
+
+    <!-- =====================================
+         NAVIGATION
+    ====================================== -->
 
     <nav class="navbar">
 
-        <div class="brand">
+<a
+    href="index.html"
+    class="brand"
+    style="
+        text-decoration:none;
+        color:inherit;
+    "
+>
 
-            <span class="brand-icon">
-                A
-            </span>
+    <span class="brand-icon">
+        A
+    </span>
 
-            <span>
-                Project Aquifer
-            </span>
+    <span>
+        Project Aquifer
+    </span>
 
-        </div>
+</a>
 
 
         <div class="nav-links">
@@ -53,7 +65,7 @@
                 href="cad.html"
                 class="active"
             >
-                CAD
+                Files
             </a>
 
             <a href="components.html">
@@ -69,7 +81,9 @@
     </nav>
 
 
-    <!-- MAIN PAGE -->
+    <!-- =====================================
+         MAIN PAGE
+    ====================================== -->
 
     <main class="page">
 
@@ -81,46 +95,52 @@
             <div>
 
                 <p class="eyebrow">
-                    ENGINEERING DESIGN
+                    PROJECT LIBRARY
                 </p>
 
                 <h1>
-                    CAD Library
+                    Project Files
                 </h1>
 
                 <p class="subtitle">
-                    Track parts, assemblies,
-                    drawings, revisions, and design ownership.
+                    Store and share CAD models,
+                    MATLAB/Simulink files,
+                    meeting notes,
+                    test data,
+                    reports, and other project documents.
                 </p>
 
             </div>
 
 
-            <button id="addCadButton">
+            <button id="addFileButton">
 
-                + Add CAD Record
+                + Add File
 
             </button>
 
         </section>
 
 
-        <!-- SUMMARY -->
+        <!-- =====================================
+             SUMMARY CARDS
+        ====================================== -->
 
-        <section class="dashboard-grid meeting-stats">
+        <section class="dashboard-grid">
+
 
             <div class="card">
 
                 <p class="card-label">
-                    CAD Records
+                    Total Files
                 </p>
 
-                <h2 id="cadRecordCount">
+                <h2 id="totalFileCount">
                     0
                 </h2>
 
                 <p class="card-note">
-                    Parts, assemblies and drawings
+                    Shared project files
                 </p>
 
             </div>
@@ -129,15 +149,15 @@
             <div class="card">
 
                 <p class="card-label">
-                    Assemblies
+                    CAD Files
                 </p>
 
-                <h2 id="assemblyCount">
+                <h2 id="cadFileCount">
                     0
                 </h2>
 
                 <p class="card-note">
-                    Assembly records
+                    Parts, assemblies, STEP files
                 </p>
 
             </div>
@@ -146,21 +166,32 @@
             <div class="card">
 
                 <p class="card-label">
-                    Latest Revision
+                    MATLAB / Simulink
                 </p>
 
-                <h2
-                    class="small-card-value"
-                    id="latestRevision"
-                >
-                    —
+                <h2 id="matlabFileCount">
+                    0
                 </h2>
 
-                <p
-                    class="card-note"
-                    id="latestRevisionInfo"
-                >
-                    No CAD records
+                <p class="card-note">
+                    Models, scripts and simulations
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <p class="card-label">
+                    Meeting Notes
+                </p>
+
+                <h2 id="meetingFileCount">
+                    0
+                </h2>
+
+                <p class="card-note">
+                    Uploaded meeting records
                 </p>
 
             </div>
@@ -168,10 +199,12 @@
         </section>
 
 
-        <!-- DATABASE MESSAGE -->
+        <!-- =====================================
+             MESSAGE
+        ====================================== -->
 
         <div
-            id="cadMessage"
+            id="fileMessage"
             style="
                 display:none;
                 margin-bottom:20px;
@@ -184,27 +217,30 @@
         ></div>
 
 
-        <!-- CAD TABLE -->
+        <!-- =====================================
+             FILE LIBRARY
+        ====================================== -->
 
         <section class="workspace">
+
 
             <div class="section-heading">
 
                 <div>
 
                     <p class="eyebrow">
-                        DESIGN FILES
+                        SHARED STORAGE
                     </p>
 
                     <h2>
-                        CAD Records
+                        File Library
                     </h2>
 
                 </div>
 
 
                 <button
-                    id="refreshCadButton"
+                    id="refreshFilesButton"
                     class="secondary-button"
                 >
                     Refresh
@@ -213,9 +249,72 @@
             </div>
 
 
+            <!-- FILTERS -->
+
+            <div
+                style="
+                    display:grid;
+                    grid-template-columns:2fr 1fr;
+                    gap:12px;
+                    margin-bottom:20px;
+                "
+            >
+
+                <input
+                    type="text"
+                    id="fileSearchInput"
+                    placeholder="Search files, owners, systems..."
+                >
+
+
+                <select id="fileCategoryFilter">
+
+                    <option value="all">
+                        All Categories
+                    </option>
+
+                    <option value="CAD File">
+                        CAD File
+                    </option>
+
+                    <option value="MATLAB / Simulink">
+                        MATLAB / Simulink
+                    </option>
+
+                    <option value="Meeting Notes">
+                        Meeting Notes
+                    </option>
+
+                    <option value="Test Data">
+                        Test Data
+                    </option>
+
+                    <option value="Report / Document">
+                        Report / Document
+                    </option>
+
+                    <option value="Image">
+                        Image
+                    </option>
+
+                    <option value="Presentation">
+                        Presentation
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TABLE -->
+
             <div
                 class="engineering-table-wrapper"
-                id="cadTableWrapper"
+                id="fileTableWrapper"
             >
 
                 <table class="engineering-table">
@@ -225,15 +324,15 @@
                         <tr>
 
                             <th>
-                                Name
+                                File
                             </th>
 
                             <th>
-                                Type
+                                Category
                             </th>
 
                             <th>
-                                Revision
+                                Related To
                             </th>
 
                             <th>
@@ -241,7 +340,15 @@
                             </th>
 
                             <th>
-                                Status
+                                Revision
+                            </th>
+
+                            <th>
+                                Size
+                            </th>
+
+                            <th>
+                                Uploaded
                             </th>
 
                             <th>
@@ -253,7 +360,7 @@
                     </thead>
 
 
-                    <tbody id="cadTableBody"></tbody>
+                    <tbody id="fileTableBody"></tbody>
 
                 </table>
 
@@ -264,7 +371,7 @@
 
             <div
                 class="empty-state"
-                id="cadEmptyState"
+                id="fileEmptyState"
             >
 
                 <div class="empty-icon">
@@ -272,12 +379,13 @@
                 </div>
 
                 <h3>
-                    No CAD records yet
+                    No project files yet
                 </h3>
 
                 <p>
-                    Add your first Project Aquifer
-                    part, assembly, or drawing.
+                    Upload your first CAD model,
+                    simulation, meeting document,
+                    test spreadsheet, or report.
                 </p>
 
             </div>
@@ -288,12 +396,12 @@
 
 
     <!-- =====================================
-         CAD MODAL
+         ADD / EDIT FILE MODAL
     ====================================== -->
 
     <div
         class="modal-background"
-        id="cadModal"
+        id="fileModal"
     >
 
         <div class="modal">
@@ -303,11 +411,11 @@
                 <div>
 
                     <p class="eyebrow">
-                        CAD RECORD
+                        PROJECT FILE
                     </p>
 
-                    <h2 id="cadModalTitle">
-                        Add CAD Record
+                    <h2 id="fileModalTitle">
+                        Add File
                     </h2>
 
                 </div>
@@ -315,7 +423,7 @@
 
                 <button
                     class="close-button"
-                    id="closeCadModal"
+                    id="closeFileModal"
                 >
                     ×
                 </button>
@@ -323,36 +431,60 @@
             </div>
 
 
-            <form id="cadForm">
+            <form id="fileForm">
 
-                <label for="cadName">
-                    Name
+
+                <!-- DISPLAY NAME -->
+
+                <label for="fileDisplayName">
+                    Display Name
                 </label>
 
                 <input
                     type="text"
-                    id="cadName"
-                    placeholder="Reservoir Bracket"
+                    id="fileDisplayName"
+                    placeholder="Reservoir CAD Model"
                     required
                 >
 
 
-                <label for="cadType">
-                    Type
+                <!-- CATEGORY -->
+
+                <label for="fileCategory">
+                    Category
                 </label>
 
-                <select id="cadType">
+                <select
+                    id="fileCategory"
+                    required
+                >
 
-                    <option value="Part">
-                        Part
+                    <option value="CAD File">
+                        CAD File
                     </option>
 
-                    <option value="Assembly">
-                        Assembly
+                    <option value="MATLAB / Simulink">
+                        MATLAB / Simulink
                     </option>
 
-                    <option value="Drawing">
-                        Drawing
+                    <option value="Meeting Notes">
+                        Meeting Notes
+                    </option>
+
+                    <option value="Test Data">
+                        Test Data
+                    </option>
+
+                    <option value="Report / Document">
+                        Report / Document
+                    </option>
+
+                    <option value="Image">
+                        Image
+                    </option>
+
+                    <option value="Presentation">
+                        Presentation
                     </option>
 
                     <option value="Other">
@@ -362,81 +494,112 @@
                 </select>
 
 
-                <label for="cadRevision">
-                    Revision
+                <!-- ACTUAL FILE -->
+
+                <div id="actualFileSection">
+
+                    <label for="actualFile">
+                        Actual File
+                    </label>
+
+                    <input
+                        type="file"
+                        id="actualFile"
+                    >
+
+                    <p
+                        style="
+                            margin-top:6px;
+                            margin-bottom:18px;
+                            font-size:12px;
+                            color:#68727d;
+                        "
+                    >
+                        Examples:
+                        .STEP, .STP, .SLDPRT, .SLDASM,
+                        .SLX, .MAT, .M, .PDF, .DOCX,
+                        .XLSX, .CSV, .PPTX, images, and more.
+                    </p>
+
+                </div>
+
+
+                <!-- EXISTING FILE INFO -->
+
+                <div
+                    id="existingFileInfo"
+                    style="
+                        display:none;
+                        margin-bottom:18px;
+                        padding:12px 14px;
+                        border:1px solid #e2e5e9;
+                        border-radius:8px;
+                        background:#f8f9fa;
+                        font-size:13px;
+                    "
+                ></div>
+
+
+                <!-- OWNER -->
+
+                <label for="fileOwner">
+                    Owner / Uploaded By
                 </label>
 
                 <input
                     type="text"
-                    id="cadRevision"
-                    placeholder="A.01"
-                >
-
-
-                <label for="cadOwner">
-                    Owner
-                </label>
-
-                <input
-                    type="text"
-                    id="cadOwner"
+                    id="fileOwner"
                     placeholder="Adama"
                 >
 
 
-                <label for="cadStatus">
-                    Status
-                </label>
+                <!-- REVISION -->
 
-                <select id="cadStatus">
-
-                    <option value="In Design">
-                        In Design
-                    </option>
-
-                    <option value="Review">
-                        Review
-                    </option>
-
-                    <option value="Approved">
-                        Approved
-                    </option>
-
-                    <option value="Superseded">
-                        Superseded
-                    </option>
-
-                </select>
-
-
-                <label for="cadFileName">
-                    File Name
+                <label for="fileRevision">
+                    Revision / Version
                 </label>
 
                 <input
                     type="text"
-                    id="cadFileName"
-                    placeholder="reservoir_bracket.SLDPRT"
+                    id="fileRevision"
+                    placeholder="A.01"
                 >
 
 
-                <label for="cadNotes">
-                    Notes
+                <!-- RELATED TO -->
+
+                <label for="fileRelatedTo">
+                    Related To
+                </label>
+
+                <input
+                    type="text"
+                    id="fileRelatedTo"
+                    placeholder="Reservoir System"
+                >
+
+
+                <!-- DESCRIPTION -->
+
+                <label for="fileDescription">
+                    Description / Notes
                 </label>
 
                 <textarea
-                    id="cadNotes"
+                    id="fileDescription"
                     rows="5"
-                    placeholder="Design notes, changes, manufacturing concerns..."
+                    placeholder="What is this file? What changed? What should teammates know?"
                 ></textarea>
 
+
+                <!-- ACTIONS -->
 
                 <div class="modal-actions">
 
                     <button
                         type="button"
                         class="secondary-button"
-                        id="cancelCadButton"
+                        id="cancelFileButton"
                     >
                         Cancel
                     </button>
@@ -444,9 +607,9 @@
 
                     <button
                         type="submit"
-                        id="saveCadButton"
+                        id="saveFileButton"
                     >
-                        Save Record
+                        Upload File
                     </button>
 
                 </div>
@@ -458,7 +621,9 @@
     </div>
 
 
-    <!-- SUPABASE -->
+    <!-- =====================================
+         SUPABASE
+    ====================================== -->
 
     <script
         src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
@@ -467,6 +632,7 @@
     <script src="supabase.js"></script>
 
     <script src="cad.js"></script>
+
 
 </body>
 

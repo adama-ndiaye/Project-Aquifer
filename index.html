@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -9,19 +10,35 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Project Aquifer</title>
+    <title>
+        Project Aquifer
+    </title>
 
     <link
         rel="stylesheet"
         href="style.css"
     >
+
 </head>
+
 
 <body>
 
+
+    <!-- =====================================
+         NAVIGATION
+    ====================================== -->
+
     <nav class="navbar">
 
-        <div class="brand">
+        <a
+            href="index.html"
+            class="brand"
+            style="
+                text-decoration:none;
+                color:inherit;
+            "
+        >
 
             <span class="brand-icon">
                 A
@@ -31,7 +48,8 @@
                 Project Aquifer
             </span>
 
-        </div>
+        </a>
+
 
         <div class="nav-links">
 
@@ -47,7 +65,7 @@
             </a>
 
             <a href="cad.html">
-                CAD
+                Files
             </a>
 
             <a href="components.html">
@@ -63,7 +81,14 @@
     </nav>
 
 
+    <!-- =====================================
+         MAIN
+    ====================================== -->
+
     <main class="page">
+
+
+        <!-- PROJECT HEADER -->
 
         <section class="page-header">
 
@@ -93,6 +118,7 @@
                     Loading...
                 </span>
 
+
                 <button
                     class="secondary-button"
                     id="editProjectButton"
@@ -105,7 +131,12 @@
         </section>
 
 
+        <!-- =====================================
+             MAIN DASHBOARD CARDS
+        ====================================== -->
+
         <section class="dashboard-grid">
+
 
             <div class="card">
 
@@ -140,10 +171,13 @@
                 </h2>
 
                 <p class="card-note">
+
                     <strong id="budgetRemaining">
                         —
                     </strong>
+
                     remaining of $6,000
+
                 </p>
 
             </div>
@@ -191,6 +225,10 @@
         </section>
 
 
+        <!-- =====================================
+             DATABASE MESSAGE
+        ====================================== -->
+
         <div
             id="dashboardMessage"
             style="
@@ -204,6 +242,10 @@
             "
         ></div>
 
+
+        <!-- =====================================
+             CURRENT WORK
+        ====================================== -->
 
         <section class="workspace">
 
@@ -269,7 +311,14 @@
         </section>
 
 
+        <!-- =====================================
+             LOWER DASHBOARD
+        ====================================== -->
+
         <section class="dashboard-lower-grid">
+
+
+            <!-- PROJECT LIBRARY -->
 
             <div class="workspace">
 
@@ -292,6 +341,9 @@
 
                 <div class="quick-link-list">
 
+
+                    <!-- FILES -->
+
                     <a
                         href="cad.html"
                         class="quick-link"
@@ -300,19 +352,23 @@
                         <div>
 
                             <strong>
-                                CAD Library
+                                Project Files
                             </strong>
 
-                            <span id="cadCount">
+                            <span id="fileCount">
                                 0 files
                             </span>
 
                         </div>
 
-                        <span>→</span>
+                        <span>
+                            →
+                        </span>
 
                     </a>
 
+
+                    <!-- COMPONENTS -->
 
                     <a
                         href="components.html"
@@ -331,10 +387,14 @@
 
                         </div>
 
-                        <span>→</span>
+                        <span>
+                            →
+                        </span>
 
                     </a>
 
+
+                    <!-- MEETINGS -->
 
                     <a
                         href="meetings.html"
@@ -353,7 +413,9 @@
 
                         </div>
 
-                        <span>→</span>
+                        <span>
+                            →
+                        </span>
 
                     </a>
 
@@ -361,6 +423,8 @@
 
             </div>
 
+
+            <!-- PROJECT DETAILS -->
 
             <div class="workspace">
 
@@ -382,6 +446,7 @@
 
 
                 <div class="project-details">
+
 
                     <div>
 
@@ -443,6 +508,10 @@
     </main>
 
 
+    <!-- =====================================
+         PROJECT SETTINGS MODAL
+    ====================================== -->
+
     <div
         class="modal-background"
         id="projectModal"
@@ -476,6 +545,7 @@
 
 
             <form id="projectForm">
+
 
                 <label for="projectPhaseInput">
                     Current Phase
@@ -529,6 +599,10 @@
     </div>
 
 
+    <!-- =====================================
+         SUPABASE
+    ====================================== -->
+
     <script
         src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
     ></script>
@@ -536,6 +610,7 @@
     <script src="supabase.js"></script>
 
     <script src="script.js"></script>
+
 
 </body>
 
